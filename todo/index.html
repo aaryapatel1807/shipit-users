@@ -17,7 +17,8 @@
         <div class="mb-6 p-4 bg-indigo-50 rounded-lg">
             <div class="flex gap-2 mb-3">
                 <input type="text" id="task-input" placeholder="Enter a new task..." 
-                       class="flex-1 p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                       class="flex-1 p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                       onkeydown="if(event.key==='Enter'){event.preventDefault();addTask();}">
                 <select id="priority-select" class="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
                     <option value="low">Low</option>
                     <option value="medium" selected>Medium</option>
