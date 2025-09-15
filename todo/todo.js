@@ -144,6 +144,24 @@ function editTask(id) {
         }
     }
 }
+    const task = tasks.find(t => t.id === id);
+    if (task) {
+        task.completed = !task.completed;
+        renderTasks();
+        updateCounts();
+    }
+}
+
+function editTask(id) {
+    const task = tasks.find(t => t.id === id);
+    if (task) {
+        const newText = prompt('Edit task:', task.text);
+        if (newText !== null && newText.trim()) {
+            task.text = newText.trim();
+            renderTasks();
+        }
+    }
+}
 
 function deleteTask(id) {
     const confirmed = confirm('Are you sure you want to delete this task?');
@@ -151,6 +169,7 @@ function deleteTask(id) {
     tasks = tasks.filter(t => t.id !== id);
     renderTasks();
     updateCounts();
+    showNotification('Task deleted.', 'success');
 }
 
 function filterTasks(filter) {

@@ -118,19 +118,27 @@ function resetDaily() {
 let notificationTimeout;
 function showNotification(message, type) {
     const notification = document.getElementById('notification');
-    notification.textContent = message;
-    notification.className = `fixed top-4 right-4 p-4 rounded-lg shadow-lg`;
-
-    // Apply color based on type
+    
+    // Remove all color classes before applying new ones
+    notification.classList.remove('bg-green-500', 'bg-yellow-500', 'bg-blue-500', 'bg-gray-700', 'text-white');
+    
+    let icon = '';
     if (type === 'success') {
         notification.classList.add('bg-green-500', 'text-white');
+        icon = '✅ ';
     } else if (type === 'reminder') {
         notification.classList.add('bg-yellow-500', 'text-white');
+        icon = '⏰ ';
     } else if (type === 'info') {
         notification.classList.add('bg-blue-500', 'text-white');
+        icon = 'ℹ️ ';
     } else {
         notification.classList.add('bg-gray-700', 'text-white');
+        icon = '⚠️ ';
     }
+
+    notification.textContent = `${icon}${message}`;
+    notification.className += ' fixed top-4 right-4 p-4 rounded-lg shadow-lg';
 
     notification.classList.remove('hidden');
     notification.style.opacity = '1';
