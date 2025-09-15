@@ -72,7 +72,7 @@
                     Delete Completed
                 </button>
             </div>
-            <button onclick="clearAllTasks()" class="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-md text-sm">
+            <button onclick="if(confirm('Are you sure you want to clear all tasks?')) clearAllTasks();" class="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-md text-sm">
                 Clear All
             </button>
         </div>
