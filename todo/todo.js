@@ -191,6 +191,12 @@ function deleteCompleted() {
 function clearAllTasks() {
     // Level 5 Bug 2: No confirmation for destructive action
     // Bug: Clears all tasks without asking for confirmation
+    const confirmed = confirm('Are you sure you want to clear all tasks? This cannot be undone.');
+    if (confirmed) {
+        tasks = [];
+        renderTasks();
+        updateCounts();
+    }
     tasks = [];
     renderTasks();
     updateCounts();
