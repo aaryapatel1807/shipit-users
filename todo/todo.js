@@ -68,8 +68,14 @@ function createTaskElement(task) {
     taskDiv.className = `p-4 border rounded-lg ${task.completed ? 'bg-green-50 border-green-200' : 'bg-white border-gray-200'}`;
     
     // Level 3 Bug 1: Priority colors not applied correctly
-    let priorityColor = 'gray'; // Bug: Should change based on task.priority but doesn't
-    
+    let priorityColor = 'gray';
+    if (task.priority === 'low') {
+        priorityColor = 'green';
+    } else if (task.priority === 'medium') {
+        priorityColor = 'yellow';
+    } else if (task.priority === 'high') {
+        priorityColor = 'red';
+    }
     // Level 3 Bug 2: Date formatting issues with invalid dates
     let dueDateText = '';
     if (task.dueDate) {
