@@ -186,9 +186,9 @@ class MusicPlayer {
 
     togglePlayPause() {
         if (this.isPlaying) {
-            this.pause();
-        } else {
             this.play();
+        } else {
+            this.pause();
         }
     }
 
