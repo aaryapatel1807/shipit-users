@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buggy Todo App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen p-4">
+    <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-lg p-6">
+        <div class="text-center mb-6">
+            <h1 class="text-3xl font-bold text-indigo-600 mb-2">📝 Todo Manager</h1>
+            <p class="text-gray-600">Stay organized and productive!</p>
+        </div>
+
+        <!-- Add New Task -->
+        <div class="mb-6 p-4 bg-indigo-50 rounded-lg">
+            <div class="flex gap-2 mb-3">
+                <input type="text" id="task-input" placeholder="Enter a new task..." 
+                       class="flex-1 p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <select id="priority-select" class="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <option value="low">Low</option>
+                    <option value="medium" selected>Medium</option>
+                    <option value="high">High</option>
+                </select>
+                <button onclick="addTask()" class="bg-indigo-500 hover:bg-indigo-600 text-white px-6 py-3 rounded-md font-semibold">
+                    Add Task
+                </button>
+            </div>
+            <div class="flex gap-2">
+                <input type="date" id="due-date" class="p-2 border border-gray-300 rounded-md">
+                <input type="time" id="due-time" class="p-2 border border-gray-300 rounded-md">
+            </div>
+        </div>
+
+        <!-- Filter and Stats -->
+        <div class="mb-6 flex justify-between items-center">
+            <div class="flex gap-2">
+                <button onclick="filterTasks('all')" class="px-4 py-2 rounded-md bg-gray-200 hover:bg-gray-300 filter-btn active" data-filter="all">
+                    All (<span id="count-all">0</span>)
+                </button>
+                <button onclick="filterTasks('pending')" class="px-4 py-2 rounded-md bg-yellow-200 hover:bg-yellow-300 filter-btn" data-filter="pending">
+                    Pending (<span id="count-pending">0</span>)
+                </button>
+                <button onclick="filterTasks('completed')" class="px-4 py-2 rounded-md bg-green-200 hover:bg-green-300 filter-btn" data-filter="completed">
+                    Done (<span id="count-completed">0</span>)
+                </button>
+            </div>
+            <div class="flex gap-2">
+                <button onclick="sortTasks('priority')" class="px-3 py-1 text-sm bg-purple-200 hover:bg-purple-300 rounded">
+                    Sort by Priority
+                </button>
+                <button onclick="sortTasks('date')" class="px-3 py-1 text-sm bg-blue-200 hover:bg-blue-300 rounded">
+                    Sort by Date
+                </button>
+            </div>
+        </div>
+
+        <!-- Task List -->
+        <div id="task-list" class="space-y-3 mb-6">
+            <!-- Tasks will appear here -->
+        </div>
+
+        <!-- Bulk Actions -->
+        <div class="flex justify-between items-center pt-4 border-t border-gray-200">
+            <div class="flex gap-2">
+                <button onclick="markAllComplete()" class="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-md text-sm">
+                    Complete All
+                </button>
+                <button onclick="deleteCompleted()" class="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-md text-sm">
+                    Delete Completed
+                </button>
+            </div>
+            <button onclick="clearAllTasks()" class="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-md text-sm">
+                Clear All
+            </button>
+        </div>
+    </div>
+
+    <script src="todo.js"></script>
+</body>
+</html>

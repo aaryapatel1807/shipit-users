@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Music Player</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Poppins', sans-serif; }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .progress-bar {
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .vinyl-spin {
+            animation: spin 3s linear infinite;
+        }
+        
+        .vinyl-spin.paused {
+            animation-play-state: paused;
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .wave {
+            animation: wave 1.5s ease-in-out infinite alternate;
+        }
+        
+        @keyframes wave {
+            0% { height: 10px; }
+            100% { height: 30px; }
+        }
+        
+        .wave:nth-child(2) { animation-delay: 0.1s; }
+        .wave:nth-child(3) { animation-delay: 0.2s; }
+        .wave:nth-child(4) { animation-delay: 0.3s; }
+        .wave:nth-child(5) { animation-delay: 0.4s; }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen flex items-center justify-center p-4">
+    <div class="glass-effect rounded-3xl p-8 w-full max-w-md shadow-2xl">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-2xl font-bold text-white mb-2">Music Player</h1>
+            <div class="flex justify-center space-x-1">
+                <div class="wave bg-white w-1 rounded-full"></div>
+                <div class="wave bg-white w-1 rounded-full"></div>
+                <div class="wave bg-white w-1 rounded-full"></div>
+                <div class="wave bg-white w-1 rounded-full"></div>
+                <div class="wave bg-white w-1 rounded-full"></div>
+            </div>
+        </div>
+
+        <!-- Album Art & Info -->
+        <div class="text-center mb-8">
+            <div class="relative inline-block">
+                <div id="albumArt" class="w-48 h-48 mx-auto rounded-full shadow-lg vinyl-spin paused overflow-hidden">
+                    <img id="albumImage" src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=300&h=300&fit=crop&crop=center" 
+                         alt="Album Art" class="w-full h-full object-cover">
+                </div>
+                <div class="absolute inset-0 rounded-full border-4 border-white/20"></div>
+                <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-6 h-6 bg-black rounded-full"></div>
+            </div>
+            <div class="mt-6 text-white">
+                <h2 id="songTitle" class="text-xl font-semibold mb-1">Chill Vibes</h2>
+                <p id="artistName" class="text-gray-300">Lo-Fi Beats</p>
+            </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="mb-6">
+            <div class="flex justify-between text-sm text-gray-300 mb-2">
+                <span id="currentTime">0:00</span>
+                <span id="duration">3:45</span>
+            </div>
+            <div class="relative">
+                <div class="w-full h-2 bg-white/20 rounded-full">
+                    <div id="progressBar" class="progress-bar h-full rounded-full transition-all duration-300" style="width: 0%"></div>
+                </div>
+                <div id="progressHandle" class="absolute top-1/2 transform -translate-y-1/2 w-4 h-4 bg-white rounded-full shadow-lg transition-all duration-300" style="left: 0%"></div>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="flex items-center justify-center space-x-6 mb-8">
+            <button id="shuffleBtn" class="text-white/60 hover:text-white transition-colors">
+                <i class="fas fa-random text-lg"></i>
+            </button>
+            <button id="prevBtn" class="text-white hover:text-white/80 transition-colors">
+                <i class="fas fa-step-backward text-2xl"></i>
+            </button>
+            <button id="playPauseBtn" class="bg-white text-purple-600 w-16 h-16 rounded-full flex items-center justify-center hover:bg-gray-100 transition-all transform hover:scale-105 shadow-lg">
+                <i class="fas fa-play text-2xl ml-1"></i>
+            </button>
+            <button id="nextBtn" class="text-white hover:text-white/80 transition-colors">
+                <i class="fas fa-step-forward text-2xl"></i>
+            </button>
+            <button id="repeatBtn" class="text-white/60 hover:text-white transition-colors">
+                <i class="fas fa-redo text-lg"></i>
+            </button>
+        </div>
+
+        <!-- Volume Control -->
+        <div class="flex items-center space-x-3 mb-6">
+            <i class="fas fa-volume-down text-white text-lg"></i>
+            <div class="flex-1 relative">
+                <div class="w-full h-2 bg-white/20 rounded-full">
+                    <div id="volumeBar" class="progress-bar h-full rounded-full transition-all duration-300" style="width: 70%"></div>
+                </div>
+                <div id="volumeHandle" class="absolute top-1/2 transform -translate-y-1/2 w-4 h-4 bg-white rounded-full shadow-lg transition-all duration-300" style="left: 70%"></div>
+            </div>
+            <i class="fas fa-volume-up text-white text-lg"></i>
+        </div>
+
+        <!-- Playlist -->
+        <div class="text-white">
+            <h3 class="text-lg font-semibold mb-4 flex items-center">
+                <i class="fas fa-list-ul mr-2"></i>
+                Playlist
+            </h3>
+            <div id="playlist" class="space-y-2 max-h-40 overflow-y-auto">
+                <!-- Playlist items will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden Audio Element -->
+    <audio id="audioPlayer" preload="metadata"></audio>
+
+    <script src="music-player.js"></script>
+</body>
+</html>
