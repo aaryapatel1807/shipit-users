@@ -150,8 +150,8 @@ function sortTasks(sortBy) {
     currentSort = sortBy;
     
     if (sortBy === 'priority') {
-        // Level 5 Bug 1: Priority sorting logic is incorrect
-        const priorityOrder = { 'low': 1, 'medium': 2, 'high': 3 }; // Bug: Wrong order, high should be first
+        // Fix: High priority should come first
+        const priorityOrder = { 'high': 1, 'medium': 2, 'low': 3 };
         tasks.sort((a, b) => priorityOrder[a.priority] - priorityOrder[b.priority]);
     } else if (sortBy === 'date') {
         tasks.sort((a, b) => {
@@ -191,6 +191,12 @@ function deleteCompleted() {
 function clearAllTasks() {
     // Level 5 Bug 2: No confirmation for destructive action
     // Bug: Clears all tasks without asking for confirmation
+    const confirmed = confirm('Are you sure you want to clear all tasks? This cannot be undone.');
+    if (confirmed) {
+        tasks = [];
+        renderTasks();
+        updateCounts();
+}
     tasks = [];
     renderTasks();
     updateCounts();
