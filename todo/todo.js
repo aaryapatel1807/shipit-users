@@ -148,11 +148,11 @@ function filterTasks(filter) {
 
 function sortTasks(sortBy) {
     currentSort = sortBy;
-    
+
     if (sortBy === 'priority') {
-        // Level 5 Bug 1: Priority sorting logic is incorrect
-        const priorityOrder = { 'low': 1, 'medium': 2, 'high': 3 }; // Bug: Wrong order, high should be first
-        tasks.sort((a, b) => priorityOrder[a.priority] - priorityOrder[b.priority]);
+        // Fix: High should be first, then Medium, then Low
+        const priorityOrder = { 'high': 3, 'medium': 2, 'low': 1 };
+        tasks.sort((a, b) => priorityOrder[b.priority] - priorityOrder[a.priority]);
     } else if (sortBy === 'date') {
         tasks.sort((a, b) => {
             const dateA = new Date(a.dueDate || '9999-12-31');
