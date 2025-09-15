@@ -193,13 +193,17 @@ class MusicPlayer {
     }
 
     play() {
-        // BUG LEVEL 5-2: Race condition - async play() can fail but state is set to playing immediately
-        this.audio.play();
-        this.isPlaying = true;
-        // BUG LEVEL 1-1: Wrong icon used for pause button
-        this.playPauseBtn.innerHTML = '<i class="fas fa-play text-2xl"></i>';
-        this.albumArt.classList.remove('paused');
-        this.updatePlaylistHighlight();
+        // Fix: Set isPlaying only after play() resolves
+        this.audio.play().then(() => {
+            this.isPlaying = true;
+            // BUG LEVEL 1-1: Wrong icon used for pause button
+            this.playPauseBtn.innerHTML = '<i class="fas fa-play text-2xl"></i>';
+            this.albumArt.classList.remove('paused');
+            this.updatePlaylistHighlight();
+        }).catch(() => {
+            // Optionally handle play() failure (e.g., show error, keep isPlaying false)
+            this.isPlaying = false;
+        });
     }
 
     pause() {
