@@ -2,16 +2,37 @@
 let apiKey = "dummyapikey"; 
 let weatherDisplay = document.getElementById("weather-display");
 let errorDisplay = document.getElementById("error-display");
+const searchBtn = document.querySelector('button[onclick="getWeather()"]');
+let isLoading = false;
+let debounceTimeout = null;
 
 // Add Enter key listener (fix Level 1 Bug 1)
 document.getElementById("city-input").addEventListener("keydown", (e) => {
- 
+    if (e.key === "Enter" && !isLoading) {
+        e.preventDefault();
+        triggerDebouncedWeather();
+    }
 });
 
+function triggerDebouncedWeather() {
+    clearTimeout(debounceTimeout);
+    debounceTimeout = setTimeout(() => {
+        getWeather();
+    }, 400); // 400ms debounce
+}
+
 function getWeather() {
+    if (isLoading) return;
+    isLoading = true;
+    searchBtn.disabled = true;
+    searchBtn.classList.add("opacity-50", "cursor-not-allowed");
+
     const city = document.getElementById("city-input").value.trim();
     if (!city) {
         errorDisplay.textContent = "Please enter a city name.";
+        isLoading = false;
+        searchBtn.disabled = false;
+        searchBtn.classList.remove("opacity-50", "cursor-not-allowed");
         return;
     }
 
@@ -49,6 +70,11 @@ function getWeather() {
             // More descriptive error handling
             errorDisplay.textContent = `Error: ${err.message}`;
             weatherDisplay.innerHTML = "";
+        })
+        .finally(() => {
+            isLoading = false;
+            searchBtn.disabled = false;
+            searchBtn.classList.remove("opacity-50", "cursor-not-allowed");
         });
 }
 
