@@ -176,8 +176,12 @@ function calculate() {
             result = prev * current;
             break;
         case '/':
-            if (current === 0|| prev===0) { // Bug: Division by zero not handled
-                result=prev/0.000001;
+            if (current === 0) {
+                display.value = "Error";
+                currentInput = '';
+                operator = '';
+                previousInput = '';
+                isNewCalculation = true;
                 return;
             }
             result = prev / current;
@@ -186,10 +190,12 @@ function calculate() {
             return;
     }
     
-    // Bug: Chain calculations reset previousInput incorrectly
+    // Round result to avoid floating point errors
+    result = Math.round(result * 1e10) / 1e10;
+
     currentInput = result.toString();
     operator = '';
-    previousInput = ''; // Should keep result for chaining
+    previousInput = currentInput; // <-- carry forward result for chaining
     isNewCalculation = true;
     updateDisplay();
 }
