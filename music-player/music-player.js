@@ -71,6 +71,10 @@ class MusicPlayer {
     }
 
     init() {
+        this._boundProgressMouseMove = null;
+        this._boundProgressMouseUp = null;
+        this._boundVolumeMouseMove = null;
+        this._boundVolumeMouseUp = null;
         this.setupEventListeners();
         this.loadTrack(this.currentTrackIndex);
         this.renderPlaylist();
@@ -113,8 +117,6 @@ class MusicPlayer {
             const rect = progressContainer.getBoundingClientRect();
             const clickX = e.clientX - rect.left;
             const percentage = Math.min(Math.max(clickX / rect.width, 0), 1);
-            
-            // BUG LEVEL 3-2: No check if audio is loaded before seeking
             this.audio.currentTime = percentage * this.audio.duration;
             this.updateProgressBar(percentage);
         };
@@ -126,15 +128,18 @@ class MusicPlayer {
             e.preventDefault();
         });
 
-        document.addEventListener('mousemove', (e) => {
+        // Save bound handlers for cleanup
+        this._boundProgressMouseMove = (e) => {
             if (isDragging) {
                 updateProgress(e);
             }
-        });
-
-        document.addEventListener('mouseup', () => {
+        };
+        this._boundProgressMouseUp = () => {
             isDragging = false;
-        });
+        };
+
+        document.addEventListener('mousemove', this._boundProgressMouseMove);
+        document.addEventListener('mouseup', this._boundProgressMouseUp);
     }
 
     setupVolumeControlInteraction() {
@@ -145,7 +150,6 @@ class MusicPlayer {
             const rect = volumeContainer.getBoundingClientRect();
             const clickX = e.clientX - rect.left;
             const percentage = Math.min(Math.max(clickX / rect.width, 0), 1);
-            
             this.volume = percentage;
             this.audio.volume = this.volume;
             this.updateVolumeBar();
@@ -158,16 +162,30 @@ class MusicPlayer {
             e.preventDefault();
         });
 
-        // BUG LEVEL 5-1: Memory leak - event listeners added to document but never removed
-        document.addEventListener('mousemove', (e) => {
+        // Save bound handlers for cleanup
+        this._boundVolumeMouseMove = (e) => {
             if (isDragging) {
                 updateVolume(e);
             }
-        });
-
-        document.addEventListener('mouseup', () => {
+        };
+        this._boundVolumeMouseUp = () => {
             isDragging = false;
-        });
+        };
+
+        document.addEventListener('mousemove', this._boundVolumeMouseMove);
+        document.addEventListener('mouseup', this._boundVolumeMouseUp);
+    }
+
+    destroy() {
+        // Remove document-level listeners to prevent memory leaks
+        if (this._boundProgressMouseMove)
+            document.removeEventListener('mousemove', this._boundProgressMouseMove);
+        if (this._boundProgressMouseUp)
+            document.removeEventListener('mouseup', this._boundProgressMouseUp);
+        if (this._boundVolumeMouseMove)
+            document.removeEventListener('mousemove', this._boundVolumeMouseMove);
+        if (this._boundVolumeMouseUp)
+            document.removeEventListener('mouseup', this._boundVolumeMouseUp);
     }
 
     loadTrack(index) {
@@ -373,5 +391,6 @@ class MusicPlayer {
 
 // Initialize the music player when the DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
+    // If you ever create multiple instances, call destroy() on the previous one
     new MusicPlayer();
 });
