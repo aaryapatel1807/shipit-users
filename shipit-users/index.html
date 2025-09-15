@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Projects Hub</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 30px;
+      background-color: #fefefe;
+      color: #111;
+    }
+
+    .container {
+      padding: 20px;
+      border: 4px solid #111;
+      border-radius: 16px;
+      background-color: #fff;
+      box-shadow: 8px 8px 0px #111;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #111;
+    }
+
+    p.subtitle {
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 1.1rem;
+      color: #444;
+    }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 25px;
+    }
+
+    .project-card, .contrib-card {
+      background-color: #f9f871;
+      border: 3px solid #111;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 6px 6px 0px #111;
+      transition: transform 0.2s ease-in-out;
+    }
+
+    .project-card:hover, .contrib-card:hover {
+      transform: translate(-4px, -4px);
+      box-shadow: 10px 10px 0px #111;
+    }
+
+    .project-card h2, .contrib-card h2 {
+      margin: 0 0 10px 0;
+      font-size: 1.5rem;
+      color: #111;
+    }
+
+    .project-card p, .contrib-card p {
+      margin: 0 0 20px 0;
+      color: #222;
+      font-size: 0.95rem;
+      line-height: 1.4;
+    }
+
+    .project-link {
+      display: inline-block;
+      padding: 10px 18px;
+      border: 2px solid #111;
+      border-radius: 8px;
+      background: #ff5da2;
+      color: #111;
+      text-decoration: none;
+      font-weight: bold;
+      box-shadow: 4px 4px 0px #111;
+      transition: all 0.2s;
+    }
+
+    .project-link:hover {
+      background: #fff;
+      color: #ff5da2;
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0px #111;
+    }
+
+    /* Contrib section styles */
+    .contrib-section {
+      margin-top: 50px;
+    }
+
+    pre {
+      background: #fff;
+      border: 2px solid #111;
+      border-radius: 8px;
+      padding: 12px;
+      font-family: monospace;
+      font-size: 0.9rem;
+      line-height: 1.4;
+      box-shadow: 4px 4px 0px #111;
+      overflow-x: auto;
+    }
+
+    ol {
+      padding-left: 20px;
+    }
+
+    ol li {
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>My Projects Hub</h1>
+    <p class="subtitle">A bold collection of side projects — quirky, useful, and a little too fun.</p>
+        <p class="subtitle">Wifi Name:ADMISSION_2025</p>
+        <p class="subtitle">Wifi Password:admc2k25</p>
+    <div class="projects-grid">
+      <div class="project-card">
+        <h2>Calculator</h2>
+        <p>Not your boring calculator — do math fast, clean, and without squinting at tiny buttons.</p>
+        <a href="calculator/index.html" class="project-link">Open Calculator</a>
+      </div>
+
+      <div class="project-card">
+        <h2>Music Player</h2>
+        <p>Play, pause, vibe. A minimal web-based player that feels like an old-school playlist deck.</p>
+        <a href="music-player/index.html" class="project-link">Open Music Player</a>
+      </div>
+
+      <div class="project-card">
+        <h2>Todo App</h2>
+        <p>Kill the chaos. Organize tasks, crush deadlines, and look productive while procrastinating.</p>
+        <a href="todo/index.html" class="project-link">Open Todo App</a>
+      </div>
+
+      <div class="project-card">
+        <h2>Water Reminder</h2>
+        <p>Your body is 70% water — stay topped up. A cheeky reminder to drink before you shrivel.</p>
+        <a href="water-reminder/index.html" class="project-link">Open Water Reminder</a>
+      </div>
+
+      <div class="project-card">
+        <h2>Weather App</h2>
+        <p>Check if you need an umbrella or sunglasses. Real-time forecasts that actually look nice.</p>
+        <a href="weather-app/index.html" class="project-link">Open Weather App</a>
+      </div>
+    </div>
+
+    <!-- Contribution Section -->
+    <div class="contrib-section">
+      <div class="contrib-card">
+        <h2>How to Contribute to Open Source 🚀</h2>
+        <p>Follow these steps to fork, commit, and open a Pull Request like a pro (and not annoy maintainers):</p>
+
+        <ol>
+          <li>
+            <strong>Fork & Clone</strong>
+            <pre>git clone git@github.com:YOUR-USERNAME/REPO.git
+cd REPO</pre>
+          </li>
+
+          <li>
+            <strong>Add Upstream</strong>
+            <pre>git remote add upstream git@github.com:ORIGINAL-OWNER/REPO.git
+git fetch upstream
+git checkout main
+git merge upstream/main</pre>
+          </li>
+
+          <li>
+            <strong>Create a Branch</strong>
+            <pre>git checkout -b fix/issue-123-description</pre>
+          </li>
+
+          <li>
+            <strong>Make Changes & Test</strong>
+            <pre># run tests depending on project
+npm test
+pytest -q</pre>
+          </li>
+
+          <li>
+            <strong>Commit</strong>
+            <pre>git add .
+git commit -m "Fix: handle null avatar (issue #123)"</pre>
+          </li>
+
+          <li>
+            <strong>Push</strong>
+            <pre>git push origin fix/issue-123-description</pre>
+          </li>
+
+          <li>
+            <strong>Open Pull Request</strong>
+            <pre>Title: Fix: handle null avatar (#123)
+Body:
+- What changed
+- Why it changed
+- How to test</pre>
+          </li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
