@@ -4,6 +4,25 @@ let taskIdCounter = 0;
 let currentFilter = 'all';
 let currentSort = 'none';
 
+// Notification system
+let notificationTimeout;
+function showNotification(msg) {
+    let notif = document.getElementById('notification');
+    if (!notif) {
+        notif = document.createElement('div');
+        notif.id = 'notification';
+        notif.className = 'fixed top-6 left-1/2 transform -translate-x-1/2 bg-indigo-500 text-white px-6 py-3 rounded shadow-lg z-50 transition-opacity duration-300';
+        document.body.appendChild(notif);
+    }
+    notif.textContent = msg;
+    notif.style.opacity = '1';
+
+    clearTimeout(notificationTimeout);
+    notificationTimeout = setTimeout(() => {
+        notif.style.opacity = '0';
+    }, 2500);
+}
+
 // Level 1 Bug 1: Missing initialization function call
 // The app should initialize on page load but doesn't
 
@@ -17,7 +36,7 @@ function addTask() {
     const taskText = taskInput.value.trim();
     
     if (!taskText) {
-        alert('Please enter a task!');
+        showNotification('Please enter a task!');
         return;
     }
     
@@ -127,9 +146,9 @@ function editTask(id) {
 }
 
 function deleteTask(id) {
-    // Level 4 Bug 1: Delete confirmation always shows even when cancelled
     const confirmed = confirm('Are you sure you want to delete this task?');
-    tasks = tasks.filter(t => t.id !== id); // Bug: Deletes even if not confirmed
+    if (!confirmed) return;
+    tasks = tasks.filter(t => t.id !== id);
     renderTasks();
     updateCounts();
 }

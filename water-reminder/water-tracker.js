@@ -115,18 +115,34 @@ function resetDaily() {
     showNotification('Daily progress reset', 'info');
 }
 
+let notificationTimeout;
 function showNotification(message, type) {
     const notification = document.getElementById('notification');
     notification.textContent = message;
     notification.className = `fixed top-4 right-4 p-4 rounded-lg shadow-lg`;
-    
-    // Level 5 Bug 1: Notification colors not applied based on type
-    // Bug: Type parameter is ignored, all notifications look the same
-    
+
+    // Apply color based on type
+    if (type === 'success') {
+        notification.classList.add('bg-green-500', 'text-white');
+    } else if (type === 'reminder') {
+        notification.classList.add('bg-yellow-500', 'text-white');
+    } else if (type === 'info') {
+        notification.classList.add('bg-blue-500', 'text-white');
+    } else {
+        notification.classList.add('bg-gray-700', 'text-white');
+    }
+
     notification.classList.remove('hidden');
-    
-    // Level 5 Bug 2: Notifications don't auto-dismiss and can stack
-    // Bug: No timeout to hide notification, and multiple notifications overlap
+    notification.style.opacity = '1';
+
+    // Clear previous timeout and set new one
+    clearTimeout(notificationTimeout);
+    notificationTimeout = setTimeout(() => {
+        notification.style.opacity = '0';
+        setTimeout(() => {
+            notification.classList.add('hidden');
+        }, 300);
+    }, 2500);
 }
 
 // Missing initialization - Level 1 Bug 1
