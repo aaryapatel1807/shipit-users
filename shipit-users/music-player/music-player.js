@@ -71,10 +71,6 @@ class MusicPlayer {
     }
 
     init() {
-        this._boundProgressMouseMove = null;
-        this._boundProgressMouseUp = null;
-        this._boundVolumeMouseMove = null;
-        this._boundVolumeMouseUp = null;
         this.setupEventListeners();
         this.loadTrack(this.currentTrackIndex);
         this.renderPlaylist();
@@ -117,6 +113,8 @@ class MusicPlayer {
             const rect = progressContainer.getBoundingClientRect();
             const clickX = e.clientX - rect.left;
             const percentage = Math.min(Math.max(clickX / rect.width, 0), 1);
+            
+            // BUG LEVEL 3-2: No check if audio is loaded before seeking
             this.audio.currentTime = percentage * this.audio.duration;
             this.updateProgressBar(percentage);
         };
@@ -128,18 +126,15 @@ class MusicPlayer {
             e.preventDefault();
         });
 
-        // Save bound handlers for cleanup
-        this._boundProgressMouseMove = (e) => {
+        document.addEventListener('mousemove', (e) => {
             if (isDragging) {
                 updateProgress(e);
             }
-        };
-        this._boundProgressMouseUp = () => {
-            isDragging = false;
-        };
+        });
 
-        document.addEventListener('mousemove', this._boundProgressMouseMove);
-        document.addEventListener('mouseup', this._boundProgressMouseUp);
+        document.addEventListener('mouseup', () => {
+            isDragging = false;
+        });
     }
 
     setupVolumeControlInteraction() {
@@ -150,6 +145,7 @@ class MusicPlayer {
             const rect = volumeContainer.getBoundingClientRect();
             const clickX = e.clientX - rect.left;
             const percentage = Math.min(Math.max(clickX / rect.width, 0), 1);
+            
             this.volume = percentage;
             this.audio.volume = this.volume;
             this.updateVolumeBar();
@@ -162,30 +158,16 @@ class MusicPlayer {
             e.preventDefault();
         });
 
-        // Save bound handlers for cleanup
-        this._boundVolumeMouseMove = (e) => {
+        // BUG LEVEL 5-1: Memory leak - event listeners added to document but never removed
+        document.addEventListener('mousemove', (e) => {
             if (isDragging) {
                 updateVolume(e);
             }
-        };
-        this._boundVolumeMouseUp = () => {
+        });
+
+        document.addEventListener('mouseup', () => {
             isDragging = false;
-        };
-
-        document.addEventListener('mousemove', this._boundVolumeMouseMove);
-        document.addEventListener('mouseup', this._boundVolumeMouseUp);
-    }
-
-    destroy() {
-        // Remove document-level listeners to prevent memory leaks
-        if (this._boundProgressMouseMove)
-            document.removeEventListener('mousemove', this._boundProgressMouseMove);
-        if (this._boundProgressMouseUp)
-            document.removeEventListener('mouseup', this._boundProgressMouseUp);
-        if (this._boundVolumeMouseMove)
-            document.removeEventListener('mousemove', this._boundVolumeMouseMove);
-        if (this._boundVolumeMouseUp)
-            document.removeEventListener('mouseup', this._boundVolumeMouseUp);
+        });
     }
 
     loadTrack(index) {
@@ -204,29 +186,18 @@ class MusicPlayer {
 
     togglePlayPause() {
         if (this.isPlaying) {
-            this.play();
-        } else {
             this.pause();
+        } else {
+            this.play();
         }
     }
 
     play() {
-        // Fix: Set isPlaying only after play() resolves
-        this.audio.play().then(() => {
-            this.isPlaying = true;
-            // BUG LEVEL 1-1: Wrong icon used for pause button
-            this.playPauseBtn.innerHTML = '<i class="fas fa-play text-2xl"></i>';
-            this.albumArt.classList.remove('paused');
-            this.updatePlaylistHighlight();
-        }).catch(() => {
-            // Optionally handle play() failure (e.g., show error, keep isPlaying false)
-            this.isPlaying = false;
-        });
         // BUG LEVEL 5-2: Race condition - async play() can fail but state is set to playing immediately
         this.audio.play();
         this.isPlaying = true;
         // BUG LEVEL 1-1: Wrong icon used for pause button
-        this.playPauseBtn.innerHTML = '<i class="fas fa-pause text-2xl"></i>';
+        this.playPauseBtn.innerHTML = '<i class="fas fa-play text-2xl"></i>';
         this.albumArt.classList.remove('paused');
         this.updatePlaylistHighlight();
     }
@@ -398,6 +369,5 @@ class MusicPlayer {
 
 // Initialize the music player when the DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    // If you ever create multiple instances, call destroy() on the previous one
     new MusicPlayer();
 });

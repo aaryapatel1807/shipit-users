@@ -4,25 +4,6 @@ let taskIdCounter = 0;
 let currentFilter = 'all';
 let currentSort = 'none';
 
-// Notification system
-let notificationTimeout;
-function showNotification(msg) {
-    let notif = document.getElementById('notification');
-    if (!notif) {
-        notif = document.createElement('div');
-        notif.id = 'notification';
-        notif.className = 'fixed top-6 left-1/2 transform -translate-x-1/2 bg-indigo-500 text-white px-6 py-3 rounded shadow-lg z-50 transition-opacity duration-300';
-        document.body.appendChild(notif);
-    }
-    notif.textContent = msg;
-    notif.style.opacity = '1';
-
-    clearTimeout(notificationTimeout);
-    notificationTimeout = setTimeout(() => {
-        notif.style.opacity = '0';
-    }, 2500);
-}
-
 // Level 1 Bug 1: Missing initialization function call
 // The app should initialize on page load but doesn't
 
@@ -36,7 +17,7 @@ function addTask() {
     const taskText = taskInput.value.trim();
     
     if (!taskText) {
-        showNotification('Please enter a task!');
+        alert('Please enter a task!');
         return;
     }
     
@@ -87,14 +68,8 @@ function createTaskElement(task) {
     taskDiv.className = `p-4 border rounded-lg ${task.completed ? 'bg-green-50 border-green-200' : 'bg-white border-gray-200'}`;
     
     // Level 3 Bug 1: Priority colors not applied correctly
-    let priorityColor = 'gray';
-    if (task.priority === 'low') {
-        priorityColor = 'green';
-    } else if (task.priority === 'medium') {
-        priorityColor = 'yellow';
-    } else if (task.priority === 'high') {
-        priorityColor = 'red';
-    }
+    let priorityColor = 'gray'; // Bug: Should change based on task.priority but doesn't
+    
     // Level 3 Bug 2: Date formatting issues with invalid dates
     let dueDateText = '';
     if (task.dueDate) {
@@ -150,39 +125,13 @@ function editTask(id) {
         }
     }
 }
-    const task = tasks.find(t => t.id === id);
-    if (task) {
-        task.completed = !task.completed;
-        renderTasks();
-        updateCounts();
-    }
-}
-
-function editTask(id) {
-    const task = tasks.find(t => t.id === id);
-    if (task) {
-        const newText = prompt('Edit task:', task.text);
-        if (newText !== null && newText.trim()) {
-            task.text = newText.trim();
-            renderTasks();
-        }
-    }
-}
 
 function deleteTask(id) {
+    // Level 4 Bug 1: Delete confirmation always shows even when cancelled
     const confirmed = confirm('Are you sure you want to delete this task?');
-    if (!confirmed) return;
-    tasks = tasks.filter(t => t.id !== id);
+    tasks = tasks.filter(t => t.id !== id); // Bug: Deletes even if not confirmed
     renderTasks();
     updateCounts();
-    showNotification('Task deleted.', 'success');
-    // Level 4 Bug 1: Delete confirmation always shows even when cancelled
-   const confirmed = confirm('Are you sure you want to delete this task?');
-    if (confirmed) {
-        tasks = tasks.filter(t => t.id !== id);
-        renderTasks();
-        updateCounts();
-    }
 }
 
 function filterTasks(filter) {
@@ -199,15 +148,10 @@ function filterTasks(filter) {
 
 function sortTasks(sortBy) {
     currentSort = sortBy;
-
+    
     if (sortBy === 'priority') {
-
-        // Fix: High should be first, then Medium, then Low
-        const priorityOrder = { 'high': 3, 'medium': 2, 'low': 1 };
-        tasks.sort((a, b) => priorityOrder[b.priority] - priorityOrder[a.priority]);
-
-        // Fix: High priority should come first
-        const priorityOrder = { 'high': 1, 'medium': 2, 'low': 3 };
+        // Level 5 Bug 1: Priority sorting logic is incorrect
+        const priorityOrder = { 'low': 1, 'medium': 2, 'high': 3 }; // Bug: Wrong order, high should be first
         tasks.sort((a, b) => priorityOrder[a.priority] - priorityOrder[b.priority]);
     } else if (sortBy === 'date') {
         tasks.sort((a, b) => {
@@ -247,12 +191,6 @@ function deleteCompleted() {
 function clearAllTasks() {
     // Level 5 Bug 2: No confirmation for destructive action
     // Bug: Clears all tasks without asking for confirmation
-    const confirmed = confirm('Are you sure you want to clear all tasks? This cannot be undone.');
-    if (confirmed) {
-        tasks = [];
-        renderTasks();
-        updateCounts();
-}
     tasks = [];
     renderTasks();
     updateCounts();

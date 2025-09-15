@@ -2,38 +2,16 @@
 let apiKey = "dummyapikey"; 
 let weatherDisplay = document.getElementById("weather-display");
 let errorDisplay = document.getElementById("error-display");
-const searchBtn = document.querySelector('button[onclick="getWeather()"]');
-let isLoading = false;
-let debounceTimeout = null;
 
 // Add Enter key listener (fix Level 1 Bug 1)
 document.getElementById("city-input").addEventListener("keydown", (e) => {
-    if (e.key === "Enter" && !isLoading) {
-        e.preventDefault();
-        triggerDebouncedWeather();
-    }
-
+ 
 });
 
-function triggerDebouncedWeather() {
-    clearTimeout(debounceTimeout);
-    debounceTimeout = setTimeout(() => {
-        getWeather();
-    }, 400); // 400ms debounce
-}
-
 function getWeather() {
-    if (isLoading) return;
-    isLoading = true;
-    searchBtn.disabled = true;
-    searchBtn.classList.add("opacity-50", "cursor-not-allowed");
-
     const city = document.getElementById("city-input").value.trim();
     if (!city) {
         errorDisplay.textContent = "Please enter a city name.";
-        isLoading = false;
-        searchBtn.disabled = false;
-        searchBtn.classList.remove("opacity-50", "cursor-not-allowed");
         return;
     }
 
@@ -53,7 +31,7 @@ function getWeather() {
             }
 
             // Correct fields for WeatherAPI
-            const temp = data.current.temp;
+            const temp = data.current.temp_c;
             const desc = data.current.condition.text;
             const icon = "https:" + data.current.condition.icon; // prepend protocol
 
@@ -71,11 +49,6 @@ function getWeather() {
             // More descriptive error handling
             errorDisplay.textContent = `Error: ${err.message}`;
             weatherDisplay.innerHTML = "";
-        })
-        .finally(() => {
-            isLoading = false;
-            searchBtn.disabled = false;
-            searchBtn.classList.remove("opacity-50", "cursor-not-allowed");
         });
 }
 
@@ -84,22 +57,3 @@ function getWeather() {
 
 // Level 5 Bug 1: No debounce for search; repeated clicks can flood API
 // Level 5 Bug 2: No input validation (numbers, script, non-city input allowed)
-function isValidCityName(city) {
-    // Allow letters, spaces, hyphens, apostrophes (common in real cities), max 50 chars
-    const cityPattern = /^[a-zA-Z\s-']{1,50}$/;
-    return cityPattern.test(city);
-}
-
-const city = document.getElementById("city-input").value.trim();
-
-if (!city) {
-    errorDisplay.textContent = "Please enter a city name.";
-    weatherDisplay.innerHTML = "";
-    return;
-}
-
-if (!isValidCityName(city)) {
-    errorDisplay.textContent = "Invalid input. Use only letters, spaces, hyphens, or apostrophes.";
-    weatherDisplay.innerHTML = "";
-    return;
-}
