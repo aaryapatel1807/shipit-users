@@ -34,7 +34,7 @@ function getWeather() {
             }
 
             // Correct fields for WeatherAPI
-            const temp = data.current.temp_c;
+            const temp = data.current.temp;
             const desc = data.current.condition.text;
             const icon = "https:" + data.current.condition.icon; // prepend protocol
 
