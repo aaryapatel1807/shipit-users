@@ -10,7 +10,7 @@ let isNewCalculation = false;
 // The display should be initialized to '0' on page load
 window.onload = function() {
     display.value = '0';
-};
+}
 
 // Bug Level 1 - Issue 2: Incorrect operator precedence handling
 function appendToDisplay(value) {
