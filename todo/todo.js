@@ -128,10 +128,12 @@ function editTask(id) {
 
 function deleteTask(id) {
     // Level 4 Bug 1: Delete confirmation always shows even when cancelled
-    const confirmed = confirm('Are you sure you want to delete this task?');
-    tasks = tasks.filter(t => t.id !== id); // Bug: Deletes even if not confirmed
-    renderTasks();
-    updateCounts();
+   const confirmed = confirm('Are you sure you want to delete this task?');
+    if (confirmed) {
+        tasks = tasks.filter(t => t.id !== id);
+        renderTasks();
+        updateCounts();
+    }
 }
 
 function filterTasks(filter) {
