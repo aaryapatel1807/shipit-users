@@ -60,3 +60,22 @@ function getWeather() {
 
 // Level 5 Bug 1: No debounce for search; repeated clicks can flood API
 // Level 5 Bug 2: No input validation (numbers, script, non-city input allowed)
+function isValidCityName(city) {
+    // Allow letters, spaces, hyphens, apostrophes (common in real cities), max 50 chars
+    const cityPattern = /^[a-zA-Z\s-']{1,50}$/;
+    return cityPattern.test(city);
+}
+
+const city = document.getElementById("city-input").value.trim();
+
+if (!city) {
+    errorDisplay.textContent = "Please enter a city name.";
+    weatherDisplay.innerHTML = "";
+    return;
+}
+
+if (!isValidCityName(city)) {
+    errorDisplay.textContent = "Invalid input. Use only letters, spaces, hyphens, or apostrophes.";
+    weatherDisplay.innerHTML = "";
+    return;
+}
