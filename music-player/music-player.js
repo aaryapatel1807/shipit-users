@@ -197,7 +197,7 @@ class MusicPlayer {
         this.audio.play();
         this.isPlaying = true;
         // BUG LEVEL 1-1: Wrong icon used for pause button
-        this.playPauseBtn.innerHTML = '<i class="fas fa-play text-2xl"></i>';
+        this.playPauseBtn.innerHTML = '<i class="fas fa-pause text-2xl"></i>';
         this.albumArt.classList.remove('paused');
         this.updatePlaylistHighlight();
     }
